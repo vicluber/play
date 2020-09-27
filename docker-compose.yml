@@ -1,0 +1,8 @@
+version: "3.2"
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ~/Documents/play:/usr/share/nginx/html
