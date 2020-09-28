@@ -5,21 +5,21 @@ var config = {
     backgroundColor: '#000000',
     parent: 'phaser-example',
     physics: {
-        default: 'matter',
-        matter: {
+        default: 'arcade',
+        arcade: {
             gravity: {
-                scale: 0
-            },
-            plugins: {
-                attractors: true
+                scale: 100
             }
         }
     },
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update: update
     }
 };
+var theWord;
+var pressedKeys = {};
 
 var game = new Phaser.Game(config);
 
@@ -31,32 +31,16 @@ function preload ()
 
 function create ()
 {
-    //  You can enable the Attractors plugin either via the game config (see above), or explicitly in code:
-    //this.matter.enableAttractorPlugin();
-
-    this.matter.world.setBounds();
-
-    this.matter.add.imageStack('alien', null, 0, 500, 50, 2, 0, 0, {
-        mass: 1,
-        ignorePointer: true
-    });
-
-    var sun = this.matter.add.image(400, 200, 'sun', null, {
-        shape: {
-            type: 'circle',
-            radius: 64
-        },
-        plugin: {
-            attractors: [
-                function (bodyA, bodyB) {
-                    return {
-                        x: (bodyA.position.x - bodyB.position.x) * 0.000001,
-                        y: (bodyA.position.y - bodyB.position.y) * 0.000001
-                    };
-                }
-            ]
-        }
-    });
-
-    this.matter.add.mouseSpring();
+    theWord = 'victor';
+    let theWordArray = theWord.split('');
+    console.log(theWordArray[0].charCodeAt());
+}
+function update()
+{
+    //window.onkeyup = function(e) { pressedKeys[e.keyCode] = false; }
+    window.onkeydown = function(e)
+    {
+        pressedKeys[e.keyCode] = true;
+    }
+    //console.log(pressedKeys);
 }
