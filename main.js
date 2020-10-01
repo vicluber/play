@@ -1,8 +1,8 @@
 var config = {
     type: Phaser.AUTO,
-    width: 1200,
+    width: 600,
     height: 800,
-    backgroundColor: '#000000',
+    backgroundColor: '#333',
     parent: 'phaser-example',
     physics: {
         default: 'arcade',
@@ -18,8 +18,10 @@ var config = {
         update: update
     }
 };
+var i = 0;
 var theWord;
-var pressedKeys = {};
+var theWordArray = [];
+//var pressedKeys = {};
 
 var game = new Phaser.Game(config);
 
@@ -31,16 +33,26 @@ function preload ()
 
 function create ()
 {
-    theWord = 'victor';
-    let theWordArray = theWord.split('');
-    console.log(theWordArray[0].charCodeAt());
+    theWord = 'Un radiometro es un tubo de vidrio o cuarzo en el que se ha hecho un vacio parcial dentro del tubo se encuentra un eje con cuatro paletas muy ligeras. Una cara de las paletas está ennegrecida, mientras que la otra es de metal pulimentado.';
+    theWordArray = theWord.split('');
+    console.log(theWord);
+}
+function checkWordArray(key, i)
+{
+    if(key == theWordArray[i])
+    {
+        console.log(key);
+        return true;
+    }
 }
 function update()
 {
     //window.onkeyup = function(e) { pressedKeys[e.keyCode] = false; }
     window.onkeydown = function(e)
     {
-        pressedKeys[e.keyCode] = true;
+        if(this.checkWordArray(e.key, i))
+        {
+            i++;
+        }
     }
-    //console.log(pressedKeys);
 }
