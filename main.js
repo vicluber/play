@@ -27,6 +27,7 @@ var misile;
 var misilesCleared = 0;
 var text;
 var lives = 3;
+var hearts;
 function preload ()
 {
     this.load.image('misile', 'assets/misile.png');
@@ -40,7 +41,7 @@ function preload ()
 function create ()
 {
     this.add.image(0, 0, 'bg-sky').setOrigin(0, 0);
-    hartLives = this.add.image(WIDTH - 50, 20, 'hart-points');
+    //hartLives = this.add.image(WIDTH - 50, 20, 'hart-points');
     this.add.image(0, 900-241, 'bg-city').setOrigin(0, 0);
     text = this.add.text(32, 32);
     text.setFontSize(25)
@@ -56,22 +57,43 @@ function create ()
     misile.setGravityY(10);
     misile.setCollideWorldBounds(true);
     misile.body.world.checkCollision.up = false;
+    hearts = this.physics.add.staticGroup({ key: 'hart-points', repeat: 2, setXY: { x: WIDTH - 150, y: 32, stepX: 50 }});
+    /*stars.children.iterate(function (child) {
+    
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    
+    });*/
 }
 function generateRandomLetter()
 {
     const alphabet = "abcdefghijklmnopqrstuvwxyz" //defining the characters able to chose randomly
     return alphabet[Math.floor(Math.random() * alphabet.length)] //return a character from "alphabet" on position equal to random between amount of characters on "alphabet"
-  }
+}
+function loseLife()
+{
+    if(lives > 0)
+    {
+        hearts.getChildren()[lives-1].destroy();
+        //hearts[lives].disableBody(true, true);
+        lives--;
+    }
+    else
+    {
+        misile.setActive(false).setVisible(false);
+        text.setActive(false).setVisible(false);
+        game.scene.add('Over', Over, true, { x: 400, y: 300 });
+    }
+}
 function update()
 {
     text.x = misile.x + 15; //Updating text position to follow the letter object (plus 5 so is not exactly on top of it)
     text.y = misile.y + 20; //Updating text position to follow the letter object
     if(misile.body.blocked.down) //if the letter objetct touchs the bottom (world boundrie)
     {
-        misilesCleared = 0; //you lose score goes to cero
         totalMisiles.text = misilesCleared.toString(); //updateing score text
         misile.y = -30; //takes the letter object back to top to set the next letter
         misile.x = Math.floor(Math.random() * WIDTH - 30); //Random x position for the next letter
+        loseLife();
     }
     
     window.onkeydown = function(e) //when windows detects event (onkeydown)
@@ -87,10 +109,7 @@ function update()
         }
         else
         {
-            misile.setActive(false).setVisible(false);
-            text.setActive(false).setVisible(false);
-            hartLives.setTexture('dead-hart');
-            game.scene.add('Over', Over, true, { x: 400, y: 300 });
+            loseLife();
         }
     }
 }
